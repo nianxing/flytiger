@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}页面未找到 - 飞虎科技天鹰砂纸{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-6 mx-auto text-center">
+            <h1 class="display-1 text-muted">404</h1>
+            <div class="mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-emoji-frown text-muted" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M4.285 12.433a.5.5 0 0 0 .683-.183A3.498 3.498 0 0 1 8 10.5c1.295 0 2.426.703 3.032 1.75a.5.5 0 0 0 .866-.5A4.498 4.498 0 0 0 8 9.5a4.5 4.5 0 0 0-3.898 2.25.5.5 0 0 0 .183.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"/>
+                </svg>
+            </div>
+            <h2 class="mb-3">页面未找到</h2>
+            <p class="lead mb-4">很抱歉，您访问的页面不存在或已被移除。</p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a href="{{ url_for('main.index') }}" class="btn btn-primary me-sm-2">返回首页</a>
+                <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary">浏览产品</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}订单确认 - 飞虎科技天鹰砂纸{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <div class="mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-check-circle-fill text-success" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                        </svg>
+                    </div>
+                    <h2 class="mb-3">订单提交成功！</h2>
+                    <p class="lead mb-4">感谢您的订购，我们已收到您的订单。</p>
+                    <div class="alert alert-info mb-4">
+                        <h5>订单号：{{ '12345678' }}</h5>
+                        <p class="mb-0">请保存此订单号，以便后续查询。</p>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body text-start">
+                                    <h5 class="card-title">订单信息</h5>
+                                    <ul class="list-unstyled">
+                                        <li><strong>订单日期：</strong> {{ now().strftime('%Y-%m-%d %H:%M:%S') }}</li>
+                                        <li><strong>支付方式：</strong> 支付宝</li>
+                                        <li><strong>配送方式：</strong> 标准快递</li>
+                                        <li><strong>订单总计：</strong> ￥24.50</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body text-start">
+                                    <h5 class="card-title">收货信息</h5>
+                                    <ul class="list-unstyled">
+                                        <li><strong>收货人：</strong> 张三</li>
+                                        <li><strong>联系电话：</strong> 137****8899</li>
+                                        <li><strong>收货地址：</strong> 广东省广州市天河区某某路某某号</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning mb-4">
+                        <h5>需要支付</h5>
+                        <p class="mb-0">请在24小时内完成支付，逾期订单将自动取消。</p>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <h5 class="mb-3">下一步您可以：</h5>
+                        <div class="d-grid gap-2 d-md-block">
+                            <button class="btn btn-primary me-md-2" type="button">去支付</button>
+                            <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary">继续购物</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">订单商品</h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">商品</th>
+                                    <th scope="col">单价</th>
+                                    <th scope="col">数量</th>
+                                    <th scope="col">小计</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>天鹰砂纸-P80</td>
+                                    <td>￥8.50</td>
+                                    <td>2</td>
+                                    <td>￥17.00</td>
+                                </tr>
+                                <tr>
+                                    <td>天鹰砂纸-P180</td>
+                                    <td>￥7.50</td>
+                                    <td>1</td>
+                                    <td>￥7.50</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>商品总计：</strong></td>
+                                    <td>￥24.50</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>运费：</strong></td>
+                                    <td>￥0.00</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>订单总计：</strong></td>
+                                    <td>￥24.50</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="{{ url_for('main.index') }}" class="btn btn-link">返回首页</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

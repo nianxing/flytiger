@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block title %}购物车 - 飞虎科技天鹰砂纸{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">购物车</h1>
+    
+    {% if cart_items %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">购物车商品 ({{ cart_items|length }})</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" width="50%">商品</th>
+                                <th scope="col">单价</th>
+                                <th scope="col">数量</th>
+                                <th scope="col">小计</th>
+                                <th scope="col">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex">
+                                        <img src="{{ url_for('static', filename='images/' + item.product.image) }}" class="img-thumbnail me-3" style="width: 100px;" alt="{{ item.product.name }}" onerror="this.src='https://via.placeholder.com/100x100?text={{ item.product.name }}'">
+                                        <div>
+                                            <h6>{{ item.product.name }}</h6>
+                                            <small class="text-muted">{{ item.product.specifications }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>￥{{ item.product.price }}</td>
+                                <td>
+                                    <div class="input-group input-group-sm" style="width: 100px;">
+                                        <button class="btn btn-outline-secondary" type="button" onclick="decrementQuantity(this)">-</button>
+                                        <input type="number" class="form-control text-center quantity-input" value="{{ item.quantity }}" min="1" max="100" data-product-id="{{ item.product.id }}" onchange="updateQuantity(this)">
+                                        <button class="btn btn-outline-secondary" type="button" onclick="incrementQuantity(this)">+</button>
+                                    </div>
+                                </td>
+                                <td>￥{{ (item.product.price * item.quantity)|round(2) }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem({{ item.product.id }})">删除</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                    </svg>
+                    继续购物
+                </a>
+                <button type="button" class="btn btn-outline-danger" onclick="clearCart()">清空购物车</button>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">订单小结</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            商品总计
+                            <span>￥{{ total|round(2) }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            运费
+                            <span>￥0.00</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
+                            订单总计
+                            <span>￥{{ total|round(2) }}</span>
+                        </li>
+                    </ul>
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="{{ url_for('main.checkout') }}" class="btn btn-primary">
+                            结算
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">优惠券</h5>
+                </div>
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="输入优惠码">
+                        <button class="btn btn-outline-secondary" type="button">应用</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="card py-5">
+                <div class="card-body">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-cart-x text-muted mb-3" viewBox="0 0 16 16">
+                        <path d="M7.354 5.646a.5.5 0 1 0-.708.708L7.793 7.5 6.646 8.646a.5.5 0 1 0 .708.708L8.5 8.207l1.146 1.147a.5.5 0 0 0 .708-.708L9.207 7.5l1.147-1.146a.5.5 0 0 0-.708-.708L8.5 6.793 7.354 5.646z"/>
+                        <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                    </svg>
+                    <h3 class="mb-3">购物车是空的</h3>
+                    <p class="text-muted mb-4">您的购物车中没有商品，快去选购吧！</p>
+                    <a href="{{ url_for('main.products') }}" class="btn btn-primary">浏览产品</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function incrementQuantity(button) {
+        const input = button.previousElementSibling;
+        if (parseInt(input.value) < parseInt(input.max)) {
+            input.value = parseInt(input.value) + 1;
+            updateQuantity(input);
+        }
+    }
+    
+    function decrementQuantity(button) {
+        const input = button.nextElementSibling;
+        if (parseInt(input.value) > parseInt(input.min)) {
+            input.value = parseInt(input.value) - 1;
+            updateQuantity(input);
+        }
+    }
+    
+    function updateQuantity(input) {
+        const productId = input.dataset.productId;
+        const quantity = input.value;
+        
+        // 这里可以添加AJAX请求更新购物车数量
+        console.log(`更新商品 ${productId} 的数量为 ${quantity}`);
+        
+        // 刷新页面来显示更新后的购物车
+        // 在实际应用中，应该使用AJAX更新并仅更新必要的部分
+        // location.reload();
+    }
+    
+    function removeItem(productId) {
+        if (confirm('确定要删除此商品吗？')) {
+            // 这里可以添加AJAX请求删除购物车商品
+            console.log(`删除商品 ${productId}`);
+            
+            // 刷新页面来显示更新后的购物车
+            // 在实际应用中，应该使用AJAX更新并仅更新必要的部分
+            // location.reload();
+        }
+    }
+    
+    function clearCart() {
+        if (confirm('确定要清空购物车吗？此操作不可撤销。')) {
+            // 这里可以添加AJAX请求清空购物车
+            console.log('清空购物车');
+            
+            // 刷新页面来显示更新后的购物车
+            // 在实际应用中，应该使用AJAX更新并仅更新必要的部分
+            // location.reload();
+        }
+    }
+</script>
+{% endblock %} 

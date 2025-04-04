@@ -1,0 +1,13 @@
+flask==2.2.3
+azure-storage-blob==12.16.0
+azure-data-tables==12.4.2
+azure-functions==1.14.0
+botbuilder-core==4.14.3
+botbuilder-dialogs==4.14.3
+botbuilder-ai==4.14.3
+python-dotenv==1.0.0
+requests==2.28.2
+Werkzeug==2.2.3
+Jinja2==3.1.2
+itsdangerous==2.1.2
+MarkupSafe==2.1.2 

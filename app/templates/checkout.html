@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{% block title %}结算 - 飞虎科技天鹰砂纸{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">结算</h1>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">收货信息</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('main.checkout') }}" method="post" id="checkout-form">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">姓名 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">手机号码 <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control" id="phone" name="phone" required pattern="[0-9]{11}">
+                            </div>
+                            <div class="col-12">
+                                <label for="email" class="form-label">电子邮箱</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                                <div class="form-text">用于接收订单和物流信息</div>
+                            </div>
+                            <div class="col-12">
+                                <label for="address" class="form-label">详细地址 <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="province" class="form-label">省份 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="province" name="province" required>
+                                    <option value="" selected disabled>请选择省份</option>
+                                    <option value="广东省">广东省</option>
+                                    <option value="北京市">北京市</option>
+                                    <option value="上海市">上海市</option>
+                                    <!-- 更多省份选项 -->
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="city" class="form-label">城市 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="city" name="city" required>
+                                    <option value="" selected disabled>请选择城市</option>
+                                    <option value="广州市">广州市</option>
+                                    <option value="深圳市">深圳市</option>
+                                    <option value="东莞市">东莞市</option>
+                                    <!-- 更多城市选项 -->
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="zip" class="form-label">邮政编码 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="zip" name="zip" required pattern="[0-9]{6}">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">配送方式</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="shipping" id="shipping1" value="standard" checked form="checkout-form">
+                        <label class="form-check-label" for="shipping1">
+                            <span class="fw-bold">标准快递</span>
+                            <span class="ms-2">3-5个工作日送达</span>
+                            <span class="badge bg-success ms-2">免运费</span>
+                        </label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="shipping" id="shipping2" value="express" form="checkout-form">
+                        <label class="form-check-label" for="shipping2">
+                            <span class="fw-bold">加急快递</span>
+                            <span class="ms-2">1-2个工作日送达</span>
+                            <span class="text-danger ms-2">+￥15.00</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">支付方式</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="payment" id="payment1" value="alipay" checked form="checkout-form">
+                        <label class="form-check-label" for="payment1">
+                            <img src="{{ url_for('static', filename='images/alipay.png') }}" alt="支付宝" height="24" onerror="this.src='https://via.placeholder.com/80x24?text=支付宝'">
+                            支付宝
+                        </label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="payment" id="payment2" value="wechat" form="checkout-form">
+                        <label class="form-check-label" for="payment2">
+                            <img src="{{ url_for('static', filename='images/wechat.png') }}" alt="微信支付" height="24" onerror="this.src='https://via.placeholder.com/80x24?text=微信支付'">
+                            微信支付
+                        </label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="payment" id="payment3" value="bankTransfer" form="checkout-form">
+                        <label class="form-check-label" for="payment3">
+                            <img src="{{ url_for('static', filename='images/bank.png') }}" alt="银行转账" height="24" onerror="this.src='https://via.placeholder.com/80x24?text=银行转账'">
+                            银行转账
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">备注</h5>
+                </div>
+                <div class="card-body">
+                    <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="有什么特殊要求可以在这里告诉我们" form="checkout-form"></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">订单小结</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6>商品清单</h6>
+                        <div class="list-group">
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted">2 x </span>天鹰砂纸-P80
+                                </div>
+                                <span>￥17.00</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="text-muted">1 x </span>天鹰砂纸-P180
+                                </div>
+                                <span>￥7.50</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            商品总计
+                            <span>￥24.50</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            运费
+                            <span>￥0.00</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
+                            订单总计
+                            <span>￥24.50</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <button type="submit" class="btn btn-primary btn-lg" form="checkout-form">提交订单</button>
+                        <a href="{{ url_for('main.cart') }}" class="btn btn-outline-secondary">返回购物车</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">购买须知</h6>
+                    <ul class="small mb-0">
+                        <li>提交订单后请在24小时内完成支付</li>
+                        <li>默认每包砂纸含50张</li>
+                        <li>大批量采购可享受批发价，请联系客服</li>
+                        <li>如有问题请拨打客服电话：123-456-7890</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 省市联动示例
+        const province = document.getElementById('province');
+        const city = document.getElementById('city');
+        
+        province.addEventListener('change', function() {
+            // 根据选择的省份更新城市选项
+            // 这里可以添加省市联动的逻辑
+            city.disabled = false;
+        });
+        
+        // 表单验证
+        const form = document.getElementById('checkout-form');
+        
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            form.classList.add('was-validated');
+        });
+    });
+</script>
+{% endblock %} 
