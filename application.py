@@ -1,8 +1,9 @@
-# Import the Flask app from run.py
-from run import app as application
+# Import everything from run.py
+from run import *
 
-# For compatibility with various WSGI servers
-app = application
+# Make sure app is directly accessible for gunicorn
+if 'app' not in globals():
+    from run import app
 
 # This file is the default entry point expected by Azure App Service
 if __name__ == '__main__':

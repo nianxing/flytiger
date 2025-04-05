@@ -44,15 +44,17 @@ jobs:
         cp -r templates deploy_package/ || echo "No templates directory"
         cp run.py deploy_package/
         cp application.py deploy_package/
+        cp app.py deploy_package/
         cp wsgi.py deploy_package/
         cp config.py deploy_package/
         cp requirements.txt deploy_package/
         cp gunicorn.conf.py deploy_package/
+        cp custom_startup.sh deploy_package/
         cp .deployment deploy_package/
         cp deploy.sh deploy_package/
-        cp startup.sh deploy_package/
+        # Make scripts executable
+        chmod +x deploy_package/custom_startup.sh
         chmod +x deploy_package/deploy.sh
-        chmod +x deploy_package/startup.sh
         
     # 使用发布配置文件部署Web应用
     - name: Deploy to Azure Web App
@@ -71,8 +73,8 @@ jobs:
     - name: Configure App Service to run startup script
       run: |
         echo "Setting explicit startup command..."
-        # Set explicit startup command to run gunicorn with our app
-        az webapp config set --name flytiger-app --resource-group flytiger-rg --startup-command "gunicorn --config gunicorn.conf.py" || echo "Could not set startup command"
+        # Set explicit startup command to run our custom startup script
+        az webapp config set --name flytiger-app --resource-group flytiger-rg --startup-command "/home/site/wwwroot/custom_startup.sh" || echo "Could not set startup command"
         
         # Set environment variables
         az webapp config appsettings set --name flytiger-app --resource-group flytiger-rg --settings \
