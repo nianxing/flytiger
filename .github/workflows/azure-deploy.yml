@@ -22,16 +22,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
-    - name: Log in to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
-    # 部署 Flask 应用
-    - name: Deploy Flask App to Azure
+    # 使用发布配置文件部署Web应用
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: flytiger-app  # 注意: 需要与您在Azure上创建的Web应用名称一致
+        app-name: 'flytiger-app'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: .
         startup-command: sh startup.sh
     
