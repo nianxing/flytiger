@@ -43,6 +43,7 @@ jobs:
         cp -r static deploy_package/ || echo "No static directory"
         cp -r templates deploy_package/ || echo "No templates directory"
         cp run.py deploy_package/
+        cp application.py deploy_package/
         cp config.py deploy_package/
         cp requirements.txt deploy_package/
         cp .deployment deploy_package/
@@ -67,17 +68,12 @@ jobs:
         
     - name: Configure App Service to run startup script
       run: |
-        echo "Setting startup command to run the startup script..."
-        az webapp config set --name flytiger-app --resource-group flytiger-rg --startup-file "/home/site/wwwroot/startup.sh" || echo "Could not set startup command via CLI"
-        
-        # Set the Linux app specific settings
-        echo "Setting Linux-specific app settings..."
-        az webapp config set --name flytiger-app --resource-group flytiger-rg --linux-fx-version "PYTHON|3.9" || echo "Could not set Python version"
-        
-        # Ensure the app knows it should be running a custom startup command
-        echo "Setting general app settings..."
+        echo "Setting startup command..."
+        # For Python apps, Azure looks for application.py by default, which we've now included
+        # We'll let Azure use its default startup command, but ensure our startup script runs first
         az webapp config appsettings set --name flytiger-app --resource-group flytiger-rg --settings \
-          FLASK_APP=run.py \
+          FLASK_APP=application.py \
           FLASK_ENV=production \
           SCM_DO_BUILD_DURING_DEPLOYMENT=true \
-          WEBSITE_RUN_FROM_PACKAGE=0 || echo "Could not set app settings"
+          WEBSITE_RUN_FROM_PACKAGE=0 \
+          PRE_BUILD_COMMAND="bash /home/site/wwwroot/startup.sh" || echo "Could not set app settings"

@@ -6,43 +6,18 @@ echo "Current directory: $(pwd)"
 echo "Directory contents:"
 ls -la
 
-# Navigate to app directory
-cd $HOME/site/wwwroot
-echo "Changed to app directory: $(pwd)"
-echo "App directory contents:"
-ls -la
-
-# Check if virtual environment exists
-if [ ! -d "env" ]; then
-    echo "Creating virtual environment..."
-    python -m venv env
+# This is needed since Azure is looking for application.py by default
+echo "Creating symlink to ensure application.py is found"
+if [ ! -f "application.py" ] && [ -f "run.py" ]; then
+  cp run.py application.py
 fi
 
-# Activate virtual environment
-echo "Activating virtual environment..."
-source env/bin/activate
-echo "Python version: $(python --version)"
-echo "Pip version: $(pip --version)"
+# Install gunicorn if not installed
+pip install gunicorn
 
-# Install dependencies if not already installed
-echo "Installing dependencies..."
-pip install --upgrade pip
-pip install -r requirements.txt
-
-# Check if Flask app exists
-if [ ! -f "run.py" ]; then
-    echo "ERROR: run.py not found!"
-    exit 1
-fi
-
-# Get the assigned port from Azure or default to 8000
-export PORT=${PORT:-8000}
+# Get the assigned port from Azure
+export PORT="${PORT:-8000}"
 echo "Starting application on port $PORT"
 
-# Set Flask environment variables
-export FLASK_APP=run.py
-export FLASK_ENV=production
-
-# Start the Flask application with gunicorn
-echo "Launching gunicorn with app:app..."
-exec gunicorn --bind=0.0.0.0:$PORT --log-level=debug run:app 
+# Let Azure handle the startup
+echo "Application ready to start..." 
