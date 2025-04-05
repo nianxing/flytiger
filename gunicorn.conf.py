@@ -1,24 +1,24 @@
 """Gunicorn config file"""
+import os
 
-# 绑定IP和端口
-bind = "0.0.0.0:8000"
+# Bind to the port provided by Azure
+bind = f"0.0.0.0:{os.environ.get('PORT', '8000')}"
 
-# 工作进程数
+# Worker configuration
 workers = 4
-
-# 超时时间
+worker_class = "sync"
 timeout = 120
 
-# 访问日志格式
+# Logging
 accesslog = "-"
-access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
-
-# 错误日志配置
 errorlog = "-"
 loglevel = "info"
 
-# 预加载应用
-preload_app = True
+# Application module
+wsgi_app = "application:app"
 
-# 工作模式
-worker_class = "sync" 
+# 访问日志格式
+access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
+
+# 预加载应用
+preload_app = True 
