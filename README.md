@@ -1,96 +1,151 @@
-# 飞虎科技砂纸产品销售平台
+# 飞虎科技天鹰砂纸销售平台
 
-这是一个用于代理飞虎科技天鹰砂纸系列产品的在线销售平台。
+这是一个专业代理销售天鹰砂纸系列产品的在线平台，基于Python Flask开发，并部署在Azure云服务上。
 
-## 项目概述
+## 项目功能
 
-本项目提供以下功能：
-- 展示天鹰砂纸产品信息和价格
+- 产品展示和详情页
+- 产品分类和筛选
+- 购物车功能
 - 在线订单处理
 - 客户服务聊天机器人
 
 ## 技术架构
 
-- **前端**：HTML, CSS, JavaScript, Bootstrap
-- **后端**：Python (Flask)
-- **数据存储**：Azure Table Storage 和 Blob Storage
-- **订单处理**：Azure Functions
-- **客户服务**：Azure Bot Service
+- **前端**: HTML, CSS, JavaScript, Bootstrap 5
+- **后端**: Python Flask
+- **数据存储**: Azure Storage (Table & Blob)
+- **云服务**: 
+  - Azure App Service (Web应用)
+  - Azure Functions (订单处理)
+  - Azure Bot Service (客户服务)
 
-## 目录结构
+## 本地开发
 
-```
-flytiger/
-├── app/                    # Flask应用主目录
-│   ├── static/             # 静态文件 (CSS, JS, 图片)
-│   ├── templates/          # HTML模板
-│   ├── __init__.py         # Flask应用初始化
-│   ├── models.py           # 数据模型
-│   ├── routes.py           # 路由定义
-│   └── azure_storage.py    # Azure存储操作
-├── function_app/           # Azure Functions
-│   └── order_processor/    # 订单处理函数
-├── bot/                    # Azure Bot Service客户服务机器人
-│   ├── app.py              # 机器人应用
-│   └── dialogs/            # 对话流程
-├── requirements.txt        # 项目依赖
-├── config.py               # 配置文件
-└── run.py                  # 应用入口点
-```
+### 环境要求
 
-## 部署步骤
+- Python 3.9+
+- pip 包管理器
 
-### 本地开发环境设置
+### 安装步骤
 
 1. 克隆仓库
-```
+```bash
 git clone https://github.com/yourusername/flytiger.git
 cd flytiger
 ```
 
-2. 创建虚拟环境并安装依赖
-```
+2. 创建并激活虚拟环境
+```bash
 python -m venv venv
-venv\Scripts\activate  # Windows
+# Windows
+venv\Scripts\activate
+# Linux/Mac
+source venv/bin/activate
+```
+
+3. 安装依赖
+```bash
 pip install -r requirements.txt
 ```
 
-3. 设置环境变量
-```
+4. 配置环境变量
+```bash
+# Windows
 set FLASK_APP=run.py
 set FLASK_ENV=development
+# Linux/Mac
+export FLASK_APP=run.py
+export FLASK_ENV=development
 ```
 
-4. 运行应用
-```
+5. 运行开发服务器
+```bash
 flask run
 ```
 
-### Azure部署
+应用将在 http://127.0.0.1:5000/ 上运行。
 
-1. 创建Azure资源:
-   - Azure App Service
-   - Azure Functions
-   - Azure Storage Account
-   - Azure Bot Service
+## Azure部署指南
 
-2. 配置Azure存储连接字符串
+### 自动部署（GitHub Actions）
 
-3. 部署Flask应用到Azure App Service
+1. **创建Azure资源**
 
-4. 部署订单处理函数到Azure Functions
+   - 创建资源组
+   - 创建Web应用（Python 3.9）
+   - 创建存储账户
 
-5. 部署客户服务机器人到Azure Bot Service
+2. **配置GitHub Secrets**
 
-## 使用说明
+   在GitHub仓库设置中，添加以下secrets：
+   - `AZURE_CREDENTIALS`: Azure服务主体凭证（JSON格式）
+   - `SECRET_KEY`: Flask应用密钥
+   - `AZURE_STORAGE_CONNECTION_STRING`: Azure存储账户连接字符串
 
-访问网站后，用户可以:
-- 浏览产品目录
-- 查看产品详情
-- 添加商品到购物车
-- 提交订单
-- 通过聊天机器人获取帮助
+3. **推送代码**
 
-## 许可
+   GitHub Actions会自动部署代码到Azure。工作流配置见`.github/workflows/azure-deploy.yml`。
 
-[许可证信息] 
+### 手动部署
+
+1. **准备部署包**
+```bash
+zip -r deployment.zip . -x "venv/*" -x ".git/*"
+```
+
+2. **在Azure Portal部署**
+   - 进入Web应用 > 部署中心
+   - 选择"手动部署" > 上传ZIP文件
+   - 上传deployment.zip
+
+3. **配置应用设置**
+   - 进入Web应用 > 配置 > 应用设置
+   - 添加必要的环境变量
+
+## 项目目录结构
+
+```
+flytiger/
+├── app/                    # Flask应用
+│   ├── static/             # 静态文件
+│   ├── templates/          # HTML模板
+│   ├── __init__.py         # 应用初始化
+│   ├── models.py           # 数据模型
+│   ├── routes.py           # 路由定义
+│   └── azure_storage.py    # Azure存储操作
+├── function_app/           # Azure Functions
+├── bot/                    # 聊天机器人
+├── requirements.txt        # 项目依赖
+├── run.py                  # 应用入口
+├── config.py               # 配置文件
+├── startup.sh              # Azure启动脚本
+├── gunicorn.conf.py        # Gunicorn配置
+└── .github/workflows/      # GitHub Actions配置
+```
+
+## 常见问题排查
+
+1. **应用无法启动**
+   - 检查启动日志：Azure Portal > Web应用 > 日志流
+   - 确认启动命令正确：`sh startup.sh`
+
+2. **Azure存储连接问题**
+   - 验证连接字符串是否正确
+   - 检查存储账户中是否已创建orders表和productimages容器
+
+3. **部署失败**
+   - 查看GitHub Actions运行日志
+   - 确认Azure凭证配置正确
+
+## 贡献指南
+
+1. Fork 仓库
+2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
+3. 提交修改 (`git commit -m 'Add amazing feature'`)
+4. 推送分支 (`git push origin feature/amazing-feature`)
+5. 创建Pull Request
+
+## 许可证
+
+[MIT](LICENSE) 
