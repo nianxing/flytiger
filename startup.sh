@@ -1,13 +1,18 @@
 #!/bin/bash
 
-# 打印Python版本
-echo "Python version:"
-python --version
+# Navigate to app directory
+cd $HOME/site/wwwroot
 
-# 安装依赖项
-echo "Installing dependencies..."
+# Activate virtual environment
+source env/bin/activate
+
+# Install dependencies if not already installed
+pip install --upgrade pip
 pip install -r requirements.txt
 
-# 启动应用
-echo "Starting application..."
-gunicorn --bind=0.0.0.0:8000 run:app --config gunicorn.conf.py 
+# Get the assigned port from Azure or default to 8000
+export PORT=${PORT:-8000}
+echo "Starting application on port $PORT"
+
+# Start the Flask application with gunicorn
+exec gunicorn --bind=0.0.0.0:$PORT run:app 

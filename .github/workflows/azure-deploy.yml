@@ -21,7 +21,36 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pip install azure-cli==2.34.1
     
+    - name: Clean up any previous deployments
+      run: |
+        # Wait a moment before attempting cleanup
+        sleep 10
+        echo "Attempting to login to Azure..."
+        az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }} || echo "Login failed, but continuing"
+        echo "Attempting to stop web app..."
+        az webapp stop --name flytiger-app --resource-group flytiger-rg || echo "Could not stop app, but continuing"
+        echo "Waiting for the app to stop..."
+        sleep 20
+        echo "Continuing with deployment..."
+    
+    - name: Create deployment package
+      run: |
+        mkdir -p deploy_package
+        # Copy essential files
+        cp -r app deploy_package/
+        cp -r static deploy_package/ || echo "No static directory"
+        cp -r templates deploy_package/ || echo "No templates directory"
+        cp run.py deploy_package/
+        cp config.py deploy_package/
+        cp requirements.txt deploy_package/
+        cp .deployment deploy_package/
+        cp deploy.sh deploy_package/
+        cp startup.sh deploy_package/
+        chmod +x deploy_package/deploy.sh
+        chmod +x deploy_package/startup.sh
+        
     # 使用发布配置文件部署Web应用
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
@@ -29,4 +58,14 @@ jobs:
       with:
         app-name: 'flytiger-app'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: .
+        package: ./deploy_package
+        
+    - name: Start web app after deployment
+      run: |
+        echo "Attempting to start web app..."
+        az webapp start --name flytiger-app --resource-group flytiger-rg || echo "Could not start app via CLI, it should start automatically"
+        
+    - name: Configure App Service to run startup script
+      run: |
+        echo "Setting startup command to run the startup script..."
+        az webapp config set --name flytiger-app --resource-group flytiger-rg --startup-file "startup.sh" || echo "Could not set startup command via CLI"
