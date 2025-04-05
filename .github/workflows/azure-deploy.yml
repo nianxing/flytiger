@@ -38,24 +38,40 @@ jobs:
     - name: Create deployment package
       run: |
         mkdir -p deploy_package
+        
         # Copy essential files
         cp -r app deploy_package/
         cp -r static deploy_package/ || echo "No static directory"
         cp -r templates deploy_package/ || echo "No templates directory"
-        cp run.py deploy_package/
-        cp application.py deploy_package/
-        cp app.py deploy_package/
-        cp wsgi.py deploy_package/
+        
+        # Copy Python files
         cp config.py deploy_package/
+        cp run.py deploy_package/
+        cp app.py deploy_package/
+        cp application.py deploy_package/
+        cp app_start.py deploy_package/
+        cp wsgi.py deploy_package/
+        
+        # Copy configuration files
         cp requirements.txt deploy_package/
         cp gunicorn.conf.py deploy_package/
-        cp custom_startup.sh deploy_package/
-        cp .deployment deploy_package/
-        cp deploy.sh deploy_package/
-        # Make scripts executable
-        chmod +x deploy_package/custom_startup.sh
-        chmod +x deploy_package/deploy.sh
         
+        # Create startup.py for Azure to detect
+        echo "Creating startup.py for Azure..."
+        echo 'import os' > deploy_package/startup.py
+        echo 'from app import app  # Import the app from app.py' >> deploy_package/startup.py
+        echo '' >> deploy_package/startup.py
+        echo 'if __name__ == "__main__":' >> deploy_package/startup.py
+        echo '    port = int(os.environ.get("PORT", 8000))' >> deploy_package/startup.py
+        echo '    app.run(host="0.0.0.0", port=port)' >> deploy_package/startup.py
+        
+        # Copy deployment files
+        cp custom_startup.sh deploy_package/
+        chmod +x deploy_package/custom_startup.sh
+        
+        # Create empty web.config to indicate Python app
+        echo '<?xml version="1.0"?><configuration></configuration>' > deploy_package/web.config
+    
     # 使用发布配置文件部署Web应用
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
@@ -73,12 +89,22 @@ jobs:
     - name: Configure App Service to run startup script
       run: |
         echo "Setting explicit startup command..."
-        # Set explicit startup command to run our custom startup script
-        az webapp config set --name flytiger-app --resource-group flytiger-rg --startup-command "/home/site/wwwroot/custom_startup.sh" || echo "Could not set startup command"
+        # Set a standard gunicorn command that Azure expects for Python apps
+        az webapp config set --name flytiger-app --resource-group flytiger-rg --startup-command "gunicorn --bind=0.0.0.0:8000 app_start:app" || echo "Could not set startup command"
         
-        # Set environment variables
+        # Ensure we're using Python 3.9
+        echo "Setting Azure to use Python 3.9..."
+        az webapp config set --name flytiger-app --resource-group flytiger-rg --linux-fx-version "PYTHON|3.9" || echo "Could not set Python version"
+        
+        # Set standard environment variables for Python apps
+        echo "Setting environment variables..."
         az webapp config appsettings set --name flytiger-app --resource-group flytiger-rg --settings \
-          FLASK_APP=application.py \
+          FLASK_APP=app_start.py \
           FLASK_ENV=production \
           SCM_DO_BUILD_DURING_DEPLOYMENT=true \
-          WEBSITE_RUN_FROM_PACKAGE=0 || echo "Could not set app settings"
+          PORT=8000 \
+          PYTHONPATH="/home/site/wwwroot" || echo "Could not set app settings"
+          
+        # Restart the web app to apply changes
+        echo "Restarting web app..."
+        az webapp restart --name flytiger-app --resource-group flytiger-rg || echo "Could not restart app"
