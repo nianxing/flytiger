@@ -53,8 +53,14 @@ jobs:
         cp wsgi.py deploy_package/
         
         # Copy configuration files
-        cp requirements.txt deploy_package/
         cp gunicorn.conf.py deploy_package/
+        
+        # Create explicit install script for Azure
+        echo "Creating Azure install script..."
+        echo '#!/bin/bash' > deploy_package/install_dependencies.sh
+        echo 'pip install python-dotenv' >> deploy_package/install_dependencies.sh
+        echo 'pip install -r requirements.txt' >> deploy_package/install_dependencies.sh
+        chmod +x deploy_package/install_dependencies.sh
         
         # Create startup.py for Azure to detect
         echo "Creating startup.py for Azure..."
@@ -64,6 +70,22 @@ jobs:
         echo 'if __name__ == "__main__":' >> deploy_package/startup.py
         echo '    port = int(os.environ.get("PORT", 8000))' >> deploy_package/startup.py
         echo '    app.run(host="0.0.0.0", port=port)' >> deploy_package/startup.py
+        
+        # Create a special requirements.txt file that Azure will recognize
+        echo "flask==2.2.3" > deploy_package/requirements.txt
+        echo "python-dotenv==1.0.0" >> deploy_package/requirements.txt
+        echo "azure-storage-blob==12.16.0" >> deploy_package/requirements.txt
+        echo "azure-data-tables==12.4.2" >> deploy_package/requirements.txt
+        echo "azure-functions==1.14.0" >> deploy_package/requirements.txt
+        echo "botbuilder-core==4.14.3" >> deploy_package/requirements.txt
+        echo "botbuilder-dialogs==4.14.3" >> deploy_package/requirements.txt
+        echo "botbuilder-ai==4.14.3" >> deploy_package/requirements.txt
+        echo "requests==2.28.2" >> deploy_package/requirements.txt
+        echo "Werkzeug==2.2.3" >> deploy_package/requirements.txt
+        echo "Jinja2==3.1.2" >> deploy_package/requirements.txt
+        echo "itsdangerous==2.1.2" >> deploy_package/requirements.txt
+        echo "MarkupSafe==2.1.2" >> deploy_package/requirements.txt
+        echo "gunicorn==20.1.0" >> deploy_package/requirements.txt
         
         # Copy deployment files
         cp custom_startup.sh deploy_package/
@@ -90,7 +112,7 @@ jobs:
       run: |
         echo "Setting explicit startup command..."
         # Set a standard gunicorn command that Azure expects for Python apps
-        az webapp config set --name flytiger-app --resource-group flytiger-rg --startup-command "gunicorn --bind=0.0.0.0:8000 app_start:app" || echo "Could not set startup command"
+        az webapp config set --name flytiger-app --resource-group flytiger-rg --startup-command "pip install python-dotenv && gunicorn --bind=0.0.0.0:8000 application:app" || echo "Could not set startup command"
         
         # Ensure we're using Python 3.9
         echo "Setting Azure to use Python 3.9..."
@@ -99,7 +121,7 @@ jobs:
         # Set standard environment variables for Python apps
         echo "Setting environment variables..."
         az webapp config appsettings set --name flytiger-app --resource-group flytiger-rg --settings \
-          FLASK_APP=app_start.py \
+          FLASK_APP=application.py \
           FLASK_ENV=production \
           SCM_DO_BUILD_DURING_DEPLOYMENT=true \
           PORT=8000 \

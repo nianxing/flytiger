@@ -14,7 +14,8 @@ echo "Directory contents:"
 ls -la
 
 # Install required packages directly
-echo "Installing requirements..."
+echo "Installing dependencies..."
+pip install python-dotenv
 pip install --upgrade pip
 pip install gunicorn
 pip install -r requirements.txt
