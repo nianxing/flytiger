@@ -1,80 +1,20 @@
 name: Deploy to Azure
-
+   
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  deploy-webapp:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    
     steps:
     - uses: actions/checkout@v2
     
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.9'
-    
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest
-    
-    - name: Log in to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
-    # 部署 Flask 应用
-    - name: Deploy Flask App to Azure
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: flytiger-app
+        app-name: 'flytiger-app'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: .
-    
-    # 部署 Azure Functions
-    - name: Deploy Function App
-      run: |
-        cd function_app
-        pip install azure-functions-core-tools@4 --upgrade
-        func azure functionapp publish flytiger-func --python
-    
-    # 部署 Bot Service
-    - name: Deploy Bot App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: flytiger-bot
-        package: ./bot
-    
-    # 上传产品图片到Blob存储
-    - name: Upload Product Images
-      run: |
-        pip install azure-storage-blob
-        python scripts/upload_images.py
-    
-    - name: Set App Settings
-      uses: azure/appservice-settings@v1
-      with:
-        app-name: flytiger-app
-        app-settings-json: |
-          [
-            {
-              "name": "FLASK_APP",
-              "value": "run.py"
-            },
-            {
-              "name": "FLASK_ENV", 
-              "value": "production"
-            },
-            {
-              "name": "SECRET_KEY",
-              "value": "${{ secrets.SECRET_KEY }}"
-            },
-            {
-              "name": "AZURE_STORAGE_CONNECTION_STRING",
-              "value": "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
-            }
-          ] 
