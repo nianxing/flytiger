@@ -30,37 +30,3 @@ jobs:
         app-name: 'flytiger-app'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: .
-    
-    # 设置应用配置
-    - name: Configure App Settings
-      uses: azure/appservice-settings@v1
-      with:
-        app-name: flytiger-app  # 保持与上面相同的名称
-        app-settings-json: |
-          [
-            {
-              "name": "FLASK_APP",
-              "value": "run.py"
-            },
-            {
-              "name": "FLASK_ENV",
-              "value": "production"
-            },
-            {
-              "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
-              "value": "true"
-            },
-            {
-              "name": "SECRET_KEY",
-              "value": "${{ secrets.SECRET_KEY }}"
-            },
-            {
-              "name": "AZURE_STORAGE_CONNECTION_STRING",
-              "value": "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
-            }
-          ]
-    
-    # 重启应用以确保设置生效
-    - name: Restart Web App
-      run: |
-        az webapp restart --name flytiger-app --resource-group flytiger-rg
