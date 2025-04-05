@@ -1,7 +1,70 @@
-- name: Deploy to Azure Web App
-uses: azure/webapps-deploy@v2
-with:
-  app-name: 'flytiger-app'
-  publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-  package: .
-  startup-command: sh startup.sh
+name: Deploy to Azure
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    # 部署 Flask 应用
+    - name: Deploy Flask App to Azure
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: flytiger-app  # 注意: 需要与您在Azure上创建的Web应用名称一致
+        package: .
+        startup-command: sh startup.sh
+    
+    # 设置应用配置
+    - name: Configure App Settings
+      uses: azure/appservice-settings@v1
+      with:
+        app-name: flytiger-app  # 保持与上面相同的名称
+        app-settings-json: |
+          [
+            {
+              "name": "FLASK_APP",
+              "value": "run.py"
+            },
+            {
+              "name": "FLASK_ENV",
+              "value": "production"
+            },
+            {
+              "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+              "value": "true"
+            },
+            {
+              "name": "SECRET_KEY",
+              "value": "${{ secrets.SECRET_KEY }}"
+            },
+            {
+              "name": "AZURE_STORAGE_CONNECTION_STRING",
+              "value": "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
+            }
+          ]
+    
+    # 重启应用以确保设置生效
+    - name: Restart Web App
+      run: |
+        az webapp restart --name flytiger-app --resource-group flytiger-rg
