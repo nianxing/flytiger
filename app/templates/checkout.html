@@ -13,7 +13,7 @@
                     <h5 class="mb-0">收货信息</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ url_for('main.checkout') }}" method="post" id="checkout-form">
+                    <form action="{{ url_for('orders.process') }}" method="post" id="checkout-form">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="name" class="form-label">姓名 <span class="text-danger">*</span></label>
@@ -167,7 +167,7 @@
                     
                     <div class="d-grid gap-2 mt-3">
                         <button type="submit" class="btn btn-primary btn-lg" form="checkout-form">提交订单</button>
-                        <a href="{{ url_for('main.cart') }}" class="btn btn-outline-secondary">返回购物车</a>
+                        <a href="{{ url_for('cart.index') }}" class="btn btn-outline-secondary">返回购物车</a>
                     </div>
                 </div>
             </div>

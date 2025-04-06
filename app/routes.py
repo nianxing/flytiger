@@ -79,7 +79,7 @@ def cart():
         # 这里应该将商品添加到购物车中（会话或数据库）
         # 简单模拟，实际应用中应使用session或数据库
         flash(f'已添加商品到购物车！')
-        return redirect(url_for('main.cart'))
+        return redirect(url_for('cart.index'))
     
     # 模拟购物车中的商品
     cart_items = [
@@ -119,7 +119,7 @@ def checkout():
         try:
             save_order_to_table(order)
             flash('订单已成功提交！')
-            return redirect(url_for('main.order_confirmation'))
+            return redirect(url_for('orders.confirmation'))
         except Exception as e:
             flash(f'订单提交失败：{str(e)}')
     

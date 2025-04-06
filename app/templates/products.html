@@ -71,8 +71,8 @@
                 </div>
                 <div class="card-footer bg-white">
                     <div class="d-grid gap-2">
-                        <a href="{{ url_for('main.product_detail', product_id=product.id) }}" class="btn btn-primary">查看详情</a>
-                        <form action="{{ url_for('main.cart') }}" method="post">
+                        <a href="{{ url_for('products.detail', product_id=product.id) }}" class="btn btn-primary">查看详情</a>
+                        <form action="{{ url_for('cart.add') }}" method="post">
                             <input type="hidden" name="product_id" value="{{ product.id }}">
                             <input type="hidden" name="quantity" value="1">
                             <button type="submit" class="btn btn-outline-primary w-100 mt-2">添加到购物车</button>
