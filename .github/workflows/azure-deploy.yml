@@ -44,6 +44,10 @@ jobs:
         cp -r static deploy_package/ || echo "No static directory"
         cp -r templates deploy_package/ || echo "No templates directory"
         
+        # Ensure app is a proper Python package
+        mkdir -p deploy_package/app/routes
+        touch deploy_package/app/routes/__init__.py
+        
         # Copy Python files
         cp config.py deploy_package/
         cp run.py deploy_package/
@@ -51,6 +55,7 @@ jobs:
         cp application.py deploy_package/
         cp app_start.py deploy_package/
         cp wsgi.py deploy_package/
+        cp debug_imports.py deploy_package/
         
         # Copy configuration files
         cp gunicorn.conf.py deploy_package/
@@ -61,15 +66,6 @@ jobs:
         echo 'pip install python-dotenv' >> deploy_package/install_dependencies.sh
         echo 'pip install -r requirements.txt' >> deploy_package/install_dependencies.sh
         chmod +x deploy_package/install_dependencies.sh
-        
-        # Create startup.py for Azure to detect
-        echo "Creating startup.py for Azure..."
-        echo 'import os' > deploy_package/startup.py
-        echo 'from app import app  # Import the app from app.py' >> deploy_package/startup.py
-        echo '' >> deploy_package/startup.py
-        echo 'if __name__ == "__main__":' >> deploy_package/startup.py
-        echo '    port = int(os.environ.get("PORT", 8000))' >> deploy_package/startup.py
-        echo '    app.run(host="0.0.0.0", port=port)' >> deploy_package/startup.py
         
         # Create a special requirements.txt file that Azure will recognize
         echo "flask==2.2.3" > deploy_package/requirements.txt

@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, render_template
+import os
 
 def create_app(config_object):
     """创建并配置Flask应用"""
@@ -6,10 +7,17 @@ def create_app(config_object):
     app.config.from_object(config_object)
     
     # 注册蓝图
-    from app.routes import main_bp
-    app.register_blueprint(main_bp)
+    from app.routes.main import main_bp
+    from app.routes.products import products_bp
+    from app.routes.orders import orders_bp
+    from app.routes.cart import cart_bp
     
-    # 注册错误处理
+    app.register_blueprint(main_bp)
+    app.register_blueprint(products_bp)
+    app.register_blueprint(orders_bp)
+    app.register_blueprint(cart_bp)
+    
+    # 注册错误处理器
     register_error_handlers(app)
     
     return app
