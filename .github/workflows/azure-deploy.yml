@@ -41,10 +41,18 @@ jobs:
         
         # Copy essential files
         cp -r app deploy_package/
-        cp -r static deploy_package/ || echo "No static directory"
-        cp -r templates deploy_package/ || echo "No templates directory"
         
-        # Ensure app is a proper Python package
+        # Ensure templates directory exists
+        mkdir -p deploy_package/app/templates
+        mkdir -p deploy_package/app/templates/errors
+        mkdir -p deploy_package/app/templates/products
+        mkdir -p deploy_package/app/templates/orders
+        mkdir -p deploy_package/app/templates/cart
+        
+        # Copy static files if they exist
+        cp -r static deploy_package/ || echo "No static directory"
+        
+        # Ensure routes directories exist
         mkdir -p deploy_package/app/routes
         touch deploy_package/app/routes/__init__.py
         
