@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ company_name }} - {{ product_line }}产品销售{% endblock %}
+{% block title %}{{ company_name }} - {{ product_line }}{% if lang == 'en' %} Products{% else %}产品销售{% endif %}{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -8,15 +8,23 @@
     <div class="p-5 mb-4 bg-light rounded-3 hero-banner">
         <div class="container-fluid py-5">
             <h1 class="display-5 fw-bold">{{ company_name }} - {{ product_line }}</h1>
-            <p class="col-md-8 fs-4">专业代理天鹰砂纸系列产品，提供各类规格砂纸满足您的不同需求。无论是木工、金属加工还是汽车维修，我们的产品都能助您一臂之力。</p>
-            <a href="{{ url_for('products.index') }}" class="btn btn-primary btn-lg">浏览产品</a>
+            <p class="col-md-8 fs-4">
+                {% if lang == 'en' %}
+                Professional agent for Eagle Sandpaper series products, providing various specifications to meet your different needs. Whether it's woodworking, metalworking, or car repair, our products can help you.
+                {% else %}
+                专业代理天鹰砂纸系列产品，提供各类规格砂纸满足您的不同需求。无论是木工、金属加工还是汽车维修，我们的产品都能助您一臂之力。
+                {% endif %}
+            </p>
+            <a href="{{ url_for('products.index', lang=lang) }}" class="btn btn-primary btn-lg">
+                {% if lang == 'en' %}Browse Products{% else %}浏览产品{% endif %}
+            </a>
         </div>
     </div>
 
     <!-- 产品特点 -->
     <div class="row mb-5">
         <div class="col-md-12 text-center mb-4">
-            <h2>为什么选择天鹰砂纸？</h2>
+            <h2>{% if lang == 'en' %}Why Choose Eagle Sandpaper?{% else %}为什么选择天鹰砂纸？{% endif %}</h2>
         </div>
         <div class="col-md-4 mb-4">
             <div class="card h-100">
@@ -24,8 +32,14 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-star mb-3 text-primary" viewBox="0 0 16 16">
                         <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
                     </svg>
-                    <h4 class="card-title">优质材料</h4>
-                    <p class="card-text">采用高品质原材料，确保产品使用寿命长，打磨效果好。</p>
+                    <h4 class="card-title">{% if lang == 'en' %}Quality Materials{% else %}优质材料{% endif %}</h4>
+                    <p class="card-text">
+                        {% if lang == 'en' %}
+                        Made from high-quality raw materials to ensure long product life and good sanding results.
+                        {% else %}
+                        采用高品质原材料，确保产品使用寿命长，打磨效果好。
+                        {% endif %}
+                    </p>
                 </div>
             </div>
         </div>
@@ -35,8 +49,14 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-tools mb-3 text-primary" viewBox="0 0 16 16">
                         <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.356 3.356a1 1 0 0 0 1.414 0l1.586-1.586a1 1 0 0 0 0-1.414l-3.356-3.356a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814L1 0zm9.646 10.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708zM3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026L3 11z"/>
                     </svg>
-                    <h4 class="card-title">多种规格</h4>
-                    <p class="card-text">提供多种粒度规格，从粗磨到精细打磨，满足不同工艺需求。</p>
+                    <h4 class="card-title">{% if lang == 'en' %}Multiple Specifications{% else %}多种规格{% endif %}</h4>
+                    <p class="card-text">
+                        {% if lang == 'en' %}
+                        Available in various grit sizes, from coarse to fine sanding, to meet different process requirements.
+                        {% else %}
+                        提供多种粒度规格，从粗磨到精细打磨，满足不同工艺需求。
+                        {% endif %}
+                    </p>
                 </div>
             </div>
         </div>
@@ -47,8 +67,14 @@
                         <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
                         <path d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
                     </svg>
-                    <h4 class="card-title">品质保证</h4>
-                    <p class="card-text">每批产品严格质检，确保稳定的性能和一致的品质。</p>
+                    <h4 class="card-title">{% if lang == 'en' %}Quality Assurance{% else %}品质保证{% endif %}</h4>
+                    <p class="card-text">
+                        {% if lang == 'en' %}
+                        Every batch of products is strictly quality checked to ensure stable performance and consistent quality.
+                        {% else %}
+                        每批产品严格质检，确保稳定的性能和一致的品质。
+                        {% endif %}
+                    </p>
                 </div>
             </div>
         </div>
@@ -57,38 +83,62 @@
     <!-- 产品推荐 -->
     <div class="row mb-5">
         <div class="col-md-12 text-center mb-4">
-            <h2>热销产品</h2>
+            <h2>{% if lang == 'en' %}Popular Products{% else %}热销产品{% endif %}</h2>
         </div>
         <div class="col-md-4 mb-4">
             <div class="card h-100">
-                <img src="{{ url_for('static', filename='images/eagle_p80.jpg') }}" class="card-img-top" alt="天鹰砂纸-P80" onerror="this.src='https://via.placeholder.com/300x200?text=砂纸P80'">
+                <img src="{{ url_for('static', filename='images/eagle_p80.jpg') }}" class="card-img-top" alt="{% if lang == 'en' %}Eagle Sandpaper-P80{% else %}天鹰砂纸-P80{% endif %}" onerror="this.src='https://via.placeholder.com/300x200?text={% if lang == 'en' %}P80{% else %}砂纸P80{% endif %}'">
                 <div class="card-body">
-                    <h5 class="card-title">天鹰砂纸-P80</h5>
-                    <p class="card-text">适用于木材粗磨、金属表面除锈。</p>
-                    <p><strong>￥8.50</strong></p>
-                    <a href="{{ url_for('products.detail', product_id=1) }}" class="btn btn-primary">查看详情</a>
+                    <h5 class="card-title">{% if lang == 'en' %}Eagle Sandpaper-P80{% else %}天鹰砂纸-P80{% endif %}</h5>
+                    <p class="card-text">
+                        {% if lang == 'en' %}
+                        Suitable for rough wood sanding and metal surface rust removal.
+                        {% else %}
+                        适用于木材粗磨、金属表面除锈。
+                        {% endif %}
+                    </p>
+                    <p><strong>{% if lang == 'en' %}${% else %}￥{% endif %}8.50</strong></p>
+                    <a href="{{ url_for('products.detail', product_id=1, lang=lang) }}" class="btn btn-primary">
+                        {% if lang == 'en' %}View Details{% else %}查看详情{% endif %}
+                    </a>
                 </div>
             </div>
         </div>
         <div class="col-md-4 mb-4">
             <div class="card h-100">
-                <img src="{{ url_for('static', filename='images/eagle_p180.jpg') }}" class="card-img-top" alt="天鹰砂纸-P180" onerror="this.src='https://via.placeholder.com/300x200?text=砂纸P180'">
+                <img src="{{ url_for('static', filename='images/eagle_p180.jpg') }}" class="card-img-top" alt="{% if lang == 'en' %}Eagle Sandpaper-P180{% else %}天鹰砂纸-P180{% endif %}" onerror="this.src='https://via.placeholder.com/300x200?text={% if lang == 'en' %}P180{% else %}砂纸P180{% endif %}'">
                 <div class="card-body">
-                    <h5 class="card-title">天鹰砂纸-P180</h5>
-                    <p class="card-text">适用于木材细磨、涂层磨平。</p>
-                    <p><strong>￥7.50</strong></p>
-                    <a href="{{ url_for('products.detail', product_id=3) }}" class="btn btn-primary">查看详情</a>
+                    <h5 class="card-title">{% if lang == 'en' %}Eagle Sandpaper-P180{% else %}天鹰砂纸-P180{% endif %}</h5>
+                    <p class="card-text">
+                        {% if lang == 'en' %}
+                        Suitable for fine wood sanding and coating leveling.
+                        {% else %}
+                        适用于木材细磨、涂层磨平。
+                        {% endif %}
+                    </p>
+                    <p><strong>{% if lang == 'en' %}${% else %}￥{% endif %}7.50</strong></p>
+                    <a href="{{ url_for('products.detail', product_id=3, lang=lang) }}" class="btn btn-primary">
+                        {% if lang == 'en' %}View Details{% else %}查看详情{% endif %}
+                    </a>
                 </div>
             </div>
         </div>
         <div class="col-md-4 mb-4">
             <div class="card h-100">
-                <img src="{{ url_for('static', filename='images/eagle_water_p1000.jpg') }}" class="card-img-top" alt="天鹰砂纸-水砂纸P1000" onerror="this.src='https://via.placeholder.com/300x200?text=水砂纸P1000'">
+                <img src="{{ url_for('static', filename='images/eagle_water_p1000.jpg') }}" class="card-img-top" alt="{% if lang == 'en' %}Eagle Sandpaper-Wet P1000{% else %}天鹰砂纸-水砂纸P1000{% endif %}" onerror="this.src='https://via.placeholder.com/300x200?text={% if lang == 'en' %}Wet P1000{% else %}水砂纸P1000{% endif %}'">
                 <div class="card-body">
-                    <h5 class="card-title">天鹰砂纸-水砂纸P1000</h5>
-                    <p class="card-text">适用于汽车漆面打磨、精细工艺。</p>
-                    <p><strong>￥9.50</strong></p>
-                    <a href="{{ url_for('products.detail', product_id=5) }}" class="btn btn-primary">查看详情</a>
+                    <h5 class="card-title">{% if lang == 'en' %}Eagle Sandpaper-Wet P1000{% else %}天鹰砂纸-水砂纸P1000{% endif %}</h5>
+                    <p class="card-text">
+                        {% if lang == 'en' %}
+                        Suitable for automotive paint sanding and fine craftsmanship.
+                        {% else %}
+                        适用于汽车漆面打磨、精细工艺。
+                        {% endif %}
+                    </p>
+                    <p><strong>{% if lang == 'en' %}${% else %}￥{% endif %}9.50</strong></p>
+                    <a href="{{ url_for('products.detail', product_id=5, lang=lang) }}" class="btn btn-primary">
+                        {% if lang == 'en' %}View Details{% else %}查看详情{% endif %}
+                    </a>
                 </div>
             </div>
         </div>
@@ -97,15 +147,29 @@
     <!-- 关于我们简介 -->
     <div class="row mb-5">
         <div class="col-md-12 text-center mb-4">
-            <h2>关于我们</h2>
+            <h2>{% if lang == 'en' %}About Us{% else %}关于我们{% endif %}</h2>
         </div>
         <div class="col-md-6">
-            <p>飞虎科技是天鹰砂纸系列产品的专业代理商，致力于为客户提供高品质的打磨解决方案。我们与制造商建立了长期稳定的合作关系，确保产品的品质和供应。</p>
-            <p>无论您是专业工匠还是DIY爱好者，我们都能为您提供适合的产品和专业的建议，帮助您完成各种打磨任务。</p>
-            <a href="{{ url_for('main.about') }}" class="btn btn-outline-primary">了解更多</a>
+            <p>
+                {% if lang == 'en' %}
+                Flytiger Technology is a professional agent for Eagle Sandpaper series products, dedicated to providing high-quality sanding solutions for customers. We have established long-term and stable cooperation with manufacturers to ensure product quality and supply.
+                {% else %}
+                飞虎科技是天鹰砂纸系列产品的专业代理商，致力于为客户提供高品质的打磨解决方案。我们与制造商建立了长期稳定的合作关系，确保产品的品质和供应。
+                {% endif %}
+            </p>
+            <p>
+                {% if lang == 'en' %}
+                Whether you are a professional craftsman or a DIY enthusiast, we can provide you with suitable products and professional advice to help you complete various sanding tasks.
+                {% else %}
+                无论您是专业工匠还是DIY爱好者，我们都能为您提供适合的产品和专业的建议，帮助您完成各种打磨任务。
+                {% endif %}
+            </p>
+            <a href="{{ url_for('main.about', lang=lang) }}" class="btn btn-outline-primary">
+                {% if lang == 'en' %}Learn More{% else %}了解更多{% endif %}
+            </a>
         </div>
         <div class="col-md-6">
-            <img src="{{ url_for('static', filename='images/about-us.jpg') }}" class="img-fluid rounded" alt="关于我们" onerror="this.src='https://via.placeholder.com/600x400?text=关于我们'">
+            <img src="{{ url_for('static', filename='images/about-us.jpg') }}" class="img-fluid rounded" alt="{% if lang == 'en' %}About Us{% else %}关于我们{% endif %}" onerror="this.src='https://via.placeholder.com/600x400?text={% if lang == 'en' %}About Us{% else %}关于我们{% endif %}'">
         </div>
     </div>
 </div>

@@ -1,13 +1,22 @@
 {% extends 'base.html' %}
 
-{% block title %}产品列表 - 飞虎科技天鹰砂纸{% endblock %}
+{% block title %}
+{% if lang == 'en' %}Product List{% else %}产品列表{% endif %} - 
+{% if lang == 'en' %}Flytiger Technology Eagle Sandpaper{% else %}飞虎科技天鹰砂纸{% endif %}
+{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h1 class="mb-4">天鹰砂纸产品</h1>
-            <p class="lead mb-5">我们提供多种规格的天鹰砂纸产品，满足不同场景的打磨需求。从粗磨到精细打磨，从木工到金属加工，从汽车维修到家具制作，天鹰砂纸都是您的理想选择。</p>
+            <h1 class="mb-4">{% if lang == 'en' %}Eagle Sandpaper Products{% else %}天鹰砂纸产品{% endif %}</h1>
+            <p class="lead mb-5">
+                {% if lang == 'en' %}
+                We offer Eagle sandpaper products in various specifications to meet sanding needs in different scenarios. From coarse to fine sanding, from woodworking to metalworking, from automotive repair to furniture making, Eagle sandpaper is your ideal choice.
+                {% else %}
+                我们提供多种规格的天鹰砂纸产品，满足不同场景的打磨需求。从粗磨到精细打磨，从木工到金属加工，从汽车维修到家具制作，天鹰砂纸都是您的理想选择。
+                {% endif %}
+            </p>
         </div>
     </div>
     
@@ -16,12 +25,12 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">产品筛选</h5>
+                    <h5 class="card-title">{% if lang == 'en' %}Product Filter{% else %}产品筛选{% endif %}</h5>
                     <form class="row g-3">
                         <div class="col-md-4">
-                            <label for="grainSize" class="form-label">粒度</label>
+                            <label for="grainSize" class="form-label">{% if lang == 'en' %}Grit Size{% else %}粒度{% endif %}</label>
                             <select id="grainSize" class="form-select">
-                                <option selected value="">所有粒度</option>
+                                <option selected value="">{% if lang == 'en' %}All Grit Sizes{% else %}所有粒度{% endif %}</option>
                                 <option>P80</option>
                                 <option>P120</option>
                                 <option>P180</option>
@@ -30,26 +39,26 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="type" class="form-label">类型</label>
+                            <label for="type" class="form-label">{% if lang == 'en' %}Type{% else %}类型{% endif %}</label>
                             <select id="type" class="form-select">
-                                <option selected value="">所有类型</option>
-                                <option>干磨砂纸</option>
-                                <option>水砂纸</option>
+                                <option selected value="">{% if lang == 'en' %}All Types{% else %}所有类型{% endif %}</option>
+                                <option>{% if lang == 'en' %}Dry Sandpaper{% else %}干磨砂纸{% endif %}</option>
+                                <option>{% if lang == 'en' %}Wet Sandpaper{% else %}水砂纸{% endif %}</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label for="usage" class="form-label">用途</label>
+                            <label for="usage" class="form-label">{% if lang == 'en' %}Usage{% else %}用途{% endif %}</label>
                             <select id="usage" class="form-select">
-                                <option selected value="">所有用途</option>
-                                <option>木工</option>
-                                <option>金属</option>
-                                <option>汽车</option>
-                                <option>通用</option>
+                                <option selected value="">{% if lang == 'en' %}All Usages{% else %}所有用途{% endif %}</option>
+                                <option>{% if lang == 'en' %}Woodworking{% else %}木工{% endif %}</option>
+                                <option>{% if lang == 'en' %}Metalworking{% else %}金属{% endif %}</option>
+                                <option>{% if lang == 'en' %}Automotive{% else %}汽车{% endif %}</option>
+                                <option>{% if lang == 'en' %}General{% else %}通用{% endif %}</option>
                             </select>
                         </div>
                         <div class="col-12">
-                            <button type="button" class="btn btn-primary">筛选</button>
-                            <button type="reset" class="btn btn-outline-secondary">重置</button>
+                            <button type="button" class="btn btn-primary">{% if lang == 'en' %}Filter{% else %}筛选{% endif %}</button>
+                            <button type="reset" class="btn btn-outline-secondary">{% if lang == 'en' %}Reset{% else %}重置{% endif %}</button>
                         </div>
                     </form>
                 </div>
@@ -66,16 +75,16 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ product.name }}</h5>
                     <p class="card-text">{{ product.description }}</p>
-                    <p class="card-text"><small class="text-muted">规格: {{ product.specifications }}</small></p>
-                    <p><strong>￥{{ product.price }}</strong></p>
+                    <p class="card-text"><small class="text-muted">{% if lang == 'en' %}Specifications{% else %}规格{% endif %}: {{ product.specifications }}</small></p>
+                    <p><strong>{% if lang == 'en' %}${% else %}￥{% endif %}{{ product.price }}</strong></p>
                 </div>
                 <div class="card-footer bg-white">
                     <div class="d-grid gap-2">
-                        <a href="{{ url_for('products.detail', product_id=product.id) }}" class="btn btn-primary">查看详情</a>
-                        <form action="{{ url_for('cart.add') }}" method="post">
+                        <a href="{{ url_for('products.detail', product_id=product.id, lang=lang) }}" class="btn btn-primary">{% if lang == 'en' %}View Details{% else %}查看详情{% endif %}</a>
+                        <form action="{{ url_for('cart.add', lang=lang) }}" method="post">
                             <input type="hidden" name="product_id" value="{{ product.id }}">
                             <input type="hidden" name="quantity" value="1">
-                            <button type="submit" class="btn btn-outline-primary w-100 mt-2">添加到购物车</button>
+                            <button type="submit" class="btn btn-outline-primary w-100 mt-2">{% if lang == 'en' %}Add to Cart{% else %}添加到购物车{% endif %}</button>
                         </form>
                     </div>
                 </div>
@@ -89,8 +98,14 @@
     <div class="row">
         <div class="col-12 text-center py-5">
             <div class="alert alert-info">
-                <h4>暂无产品</h4>
-                <p>目前没有符合条件的产品，请尝试其他筛选条件或稍后再试。</p>
+                <h4>{% if lang == 'en' %}No Products{% else %}暂无产品{% endif %}</h4>
+                <p>
+                    {% if lang == 'en' %}
+                    There are currently no products that match the criteria. Please try other filter conditions or check back later.
+                    {% else %}
+                    目前没有符合条件的产品，请尝试其他筛选条件或稍后再试。
+                    {% endif %}
+                </p>
             </div>
         </div>
     </div>

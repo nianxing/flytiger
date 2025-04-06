@@ -1,17 +1,23 @@
 {% extends 'base.html' %}
 
-{% block title %}联系我们 - 飞虎科技天鹰砂纸{% endblock %}
+{% block title %}{% if lang == 'en' %}Contact Us{% else %}联系我们{% endif %} - {% if lang == 'en' %}Flytiger Technology Eagle Sandpaper{% else %}飞虎科技天鹰砂纸{% endif %}{% endblock %}
 
 {% block content %}
 <div class="container py-4">
     <div class="row">
         <div class="col-md-6">
-            <h1 class="mb-4">联系我们</h1>
-            <p class="lead mb-4">感谢您对飞虎科技天鹰砂纸的关注。如有任何问题或需求，欢迎随时联系我们，我们将竭诚为您服务。</p>
+            <h1 class="mb-4">{% if lang == 'en' %}Contact Us{% else %}联系我们{% endif %}</h1>
+            <p class="lead mb-4">
+                {% if lang == 'en' %}
+                Thank you for your interest in Flytiger Technology Eagle Sandpaper. If you have any questions or inquiries, please feel free to contact us. We are dedicated to serving you.
+                {% else %}
+                感谢您对飞虎科技天鹰砂纸的关注。如有任何问题或需求，欢迎随时联系我们，我们将竭诚为您服务。
+                {% endif %}
+            </p>
             
             <div class="card mb-4">
                 <div class="card-body">
-                    <h5 class="card-title">联系方式</h5>
+                    <h5 class="card-title">{% if lang == 'en' %}Contact Information{% else %}联系方式{% endif %}</h5>
                     <ul class="list-unstyled">
                         <li class="mb-3">
                             <div class="d-flex">
@@ -22,8 +28,14 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <h6 class="mb-1">地址</h6>
-                                    <p class="mb-0">广东省广州市天河区某某路某某号</p>
+                                    <h6 class="mb-1">{% if lang == 'en' %}Address{% else %}地址{% endif %}</h6>
+                                    <p class="mb-0">
+                                        {% if lang == 'en' %}
+                                        Some Road, Tianhe District, Guangzhou, Guangdong Province, China
+                                        {% else %}
+                                        广东省广州市天河区某某路某某号
+                                        {% endif %}
+                                    </p>
                                 </div>
                             </div>
                         </li>
@@ -35,7 +47,7 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <h6 class="mb-1">电话</h6>
+                                    <h6 class="mb-1">{% if lang == 'en' %}Phone{% else %}电话{% endif %}</h6>
                                     <p class="mb-0">123-456-7890</p>
                                 </div>
                             </div>
@@ -48,23 +60,35 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <h6 class="mb-1">电子邮箱</h6>
+                                    <h6 class="mb-1">{% if lang == 'en' %}Email{% else %}电子邮箱{% endif %}</h6>
                                     <p class="mb-0">info@flytiger.com</p>
                                 </div>
                             </div>
                         </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{% if lang == 'en' %}Business Hours{% else %}营业时间{% endif %}</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>{% if lang == 'en' %}Monday - Friday{% else %}周一至周五{% endif %}</span>
+                                <span>9:00 AM - 6:00 PM</span>
+                            </div>
+                        </li>
+                        <li class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>{% if lang == 'en' %}Saturday{% else %}周六{% endif %}</span>
+                                <span>9:00 AM - 1:00 PM</span>
+                            </div>
+                        </li>
                         <li>
-                            <div class="d-flex">
-                                <div class="me-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-clock text-primary" viewBox="0 0 16 16">
-                                        <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h6 class="mb-1">营业时间</h6>
-                                    <p class="mb-0">周一至周五: 9:00 - 18:00<br>周六: 9:00 - 14:00<br>周日: 休息</p>
-                                </div>
+                            <div class="d-flex justify-content-between">
+                                <span>{% if lang == 'en' %}Sunday{% else %}周日{% endif %}</span>
+                                <span>{% if lang == 'en' %}Closed{% else %}休息{% endif %}</span>
                             </div>
                         </li>
                     </ul>
@@ -96,40 +120,33 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title mb-4">给我们留言</h5>
+                    <h5 class="card-title mb-4">{% if lang == 'en' %}Send Us a Message{% else %}给我们留言{% endif %}</h5>
                     <form>
                         <div class="mb-3">
-                            <label for="name" class="form-label">您的姓名 <span class="text-danger">*</span></label>
+                            <label for="name" class="form-label">{% if lang == 'en' %}Name{% else %}姓名{% endif %}</label>
                             <input type="text" class="form-control" id="name" required>
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label">电子邮箱 <span class="text-danger">*</span></label>
+                            <label for="email" class="form-label">{% if lang == 'en' %}Email{% else %}电子邮箱{% endif %}</label>
                             <input type="email" class="form-control" id="email" required>
                         </div>
                         <div class="mb-3">
-                            <label for="phone" class="form-label">电话号码</label>
+                            <label for="phone" class="form-label">{% if lang == 'en' %}Phone{% else %}电话{% endif %}</label>
                             <input type="tel" class="form-control" id="phone">
                         </div>
                         <div class="mb-3">
-                            <label for="subject" class="form-label">主题 <span class="text-danger">*</span></label>
-                            <select class="form-select" id="subject" required>
-                                <option value="" selected disabled>请选择...</option>
-                                <option value="product">产品咨询</option>
-                                <option value="order">订单查询</option>
-                                <option value="wholesale">批发合作</option>
-                                <option value="complaint">投诉建议</option>
-                                <option value="other">其他</option>
-                            </select>
+                            <label for="subject" class="form-label">{% if lang == 'en' %}Subject{% else %}主题{% endif %}</label>
+                            <input type="text" class="form-control" id="subject" required>
                         </div>
                         <div class="mb-3">
-                            <label for="message" class="form-label">留言内容 <span class="text-danger">*</span></label>
+                            <label for="message" class="form-label">{% if lang == 'en' %}Message{% else %}留言内容{% endif %}</label>
                             <textarea class="form-control" id="message" rows="5" required></textarea>
                         </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="privacy" required>
                             <label class="form-check-label" for="privacy">我同意飞虎科技根据<a href="#">隐私政策</a>处理我的个人信息</label>
                         </div>
-                        <button type="submit" class="btn btn-primary">提交留言</button>
+                        <button type="submit" class="btn btn-primary">{% if lang == 'en' %}Submit{% else %}提交{% endif %}</button>
                     </form>
                 </div>
             </div>
@@ -140,9 +157,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title mb-4">我们的位置</h5>
-                    <div class="ratio ratio-21x9">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.494680949789!2d113.32375151542257!3d23.132200084897483!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3402f9065c8bfe51%3A0xb48f4f9b39c67bcc!2z5aSp5rKz5aSn5Yip!5e0!3m2!1szh-CN!2sus!4v1617282724718!5m2!1szh-CN!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    <h5 class="card-title mb-4">{% if lang == 'en' %}Our Location{% else %}我们的位置{% endif %}</h5>
+                    <div class="ratio ratio-16x9">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3666.8661500792295!2d113.33177177507895!3d23.1397420842899!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3402fec56de4e07d%3A0x5a90b940b3612b4c!2sTianhe%20Rd%2C%20Tianhe%20District%2C%20Guangzhou%2C%20Guangdong%20Province%2C%20China!5e0!3m2!1sen!2sus!4v1691399079457!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
             </div>

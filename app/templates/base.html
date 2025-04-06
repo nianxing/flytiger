@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="{% if lang == 'en' %}en{% else %}zh-CN{% endif %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,31 +15,42 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">
-                <strong>飞虎科技</strong> | 天鹰砂纸
+                <strong>{% if lang == 'en' %}Flytiger Technology{% else %}飞虎科技{% endif %}</strong> | {% if lang == 'en' %}Eagle Sandpaper{% else %}天鹰砂纸{% endif %}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == url_for('main.index') %}active{% endif %}" href="{{ url_for('main.index') }}">首页</a>
+                        <a class="nav-link {% if request.path == url_for('main.index') %}active{% endif %}" href="{{ url_for('main.index') }}">{% if lang == 'en' %}Home{% else %}首页{% endif %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path.startswith(url_for('products.index')) %}active{% endif %}" href="{{ url_for('products.index') }}">产品</a>
+                        <a class="nav-link {% if request.path.startswith(url_for('products.index')) %}active{% endif %}" href="{{ url_for('products.index') }}">{% if lang == 'en' %}Products{% else %}产品{% endif %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == url_for('main.about') %}active{% endif %}" href="{{ url_for('main.about') }}">关于我们</a>
+                        <a class="nav-link {% if request.path == url_for('main.about') %}active{% endif %}" href="{{ url_for('main.about') }}">{% if lang == 'en' %}About Us{% else %}关于我们{% endif %}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == url_for('main.contact') %}active{% endif %}" href="{{ url_for('main.contact') }}">联系我们</a>
+                        <a class="nav-link {% if request.path == url_for('main.contact') %}active{% endif %}" href="{{ url_for('main.contact') }}">{% if lang == 'en' %}Contact{% else %}联系我们{% endif %}</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if lang == 'en' %}English{% else %}中文{% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item language-option" href="#" data-lang="cn">中文</a></li>
+                            <li><a class="dropdown-item language-option" href="#" data-lang="en">English</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.path.startswith(url_for('cart.index')) %}active{% endif %}" href="{{ url_for('cart.index') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
                                 <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                             </svg>
-                            购物车
+                            {% if lang == 'en' %}Cart{% else %}购物车{% endif %}
                         </a>
                     </li>
                 </ul>
@@ -70,32 +81,37 @@
     <footer class="bg-dark text-white py-4 mt-5">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <h5>飞虎科技</h5>
-                    <p>专业代理天鹰砂纸系列产品</p>
-                    <p>质量保证，服务至上</p>
-                </div>
-                <div class="col-md-4">
-                    <h5>联系我们</h5>
+                <div class="col-md-3">
+                    <h5>{% if lang == 'en' %}Quick Links{% else %}快速链接{% endif %}</h5>
                     <ul class="list-unstyled">
-                        <li>电话：123-456-7890</li>
-                        <li>邮箱：info@flytiger.com</li>
-                        <li>地址：中国广东省广州市</li>
+                        <li><a href="{{ url_for('main.index') }}" class="text-white">{% if lang == 'en' %}Home{% else %}首页{% endif %}</a></li>
+                        <li><a href="{{ url_for('products.index') }}" class="text-white">{% if lang == 'en' %}Products{% else %}产品{% endif %}</a></li>
+                        <li><a href="{{ url_for('main.about') }}" class="text-white">{% if lang == 'en' %}About Us{% else %}关于我们{% endif %}</a></li>
+                        <li><a href="{{ url_for('main.contact') }}" class="text-white">{% if lang == 'en' %}Contact{% else %}联系我们{% endif %}</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4">
-                    <h5>快速链接</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="{{ url_for('main.index') }}" class="text-white">首页</a></li>
-                        <li><a href="{{ url_for('products.index') }}" class="text-white">产品</a></li>
-                        <li><a href="{{ url_for('main.about') }}" class="text-white">关于我们</a></li>
-                        <li><a href="{{ url_for('main.contact') }}" class="text-white">联系我们</a></li>
-                    </ul>
+                <div class="col-md-3">
+                    <h5>{% if lang == 'en' %}Contact Us{% else %}联系我们{% endif %}</h5>
+                    <address class="text-white">
+                        <p>{% if lang == 'en' %}Address: 385 Tianhe Road, Tianhe District, Guangzhou, China{% else %}地址：广州市天河区天河路385号{% endif %}</p>
+                        <p>{% if lang == 'en' %}Phone: +86 20-1234567{% else %}电话：020-1234567{% endif %}</p>
+                        <p>{% if lang == 'en' %}Email: info@flytiger.com{% else %}邮箱：info@flytiger.com{% endif %}</p>
+                    </address>
+                </div>
+                <div class="col-md-6">
+                    <h5>{% if lang == 'en' %}About Flytiger Technology{% else %}关于飞虎科技{% endif %}</h5>
+                    <p class="text-white">
+                        {% if lang == 'en' %}
+                        Flytiger Technology is a professional agent for Eagle sandpaper products. We provide high-quality sandpaper for all your woodworking, metalworking, and automotive repair needs.
+                        {% else %}
+                        飞虎科技是天鹰砂纸产品的专业代理商，为您提供木工、金属加工和汽车维修等各类高品质砂纸产品。
+                        {% endif %}
+                    </p>
                 </div>
             </div>
             <hr class="mt-3 mb-3">
             <div class="text-center">
-                <p>&copy; 2023 飞虎科技 版权所有</p>
+                <p>&copy; 2023 {% if lang == 'en' %}Flytiger Technology{% else %}飞虎科技{% endif %} {% if lang == 'en' %}All Rights Reserved{% else %}版权所有{% endif %}</p>
             </div>
         </div>
     </footer>
@@ -104,6 +120,28 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <!-- 自定义JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <!-- 语言切换JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const languageOptions = document.querySelectorAll('.language-option');
+            
+            // 为每个语言选项添加点击事件
+            languageOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    
+                    // 设置Cookie
+                    document.cookie = `user_lang=${lang}; path=/; max-age=31536000`; // 一年有效期
+                    
+                    // 重新加载当前页面
+                    window.location.reload();
+                });
+            });
+        });
+    </script>
+    
     {% block extra_js %}{% endblock %}
 </body>
 </html> 

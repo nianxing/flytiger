@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ product.name }} - 飞虎科技天鹰砂纸{% endblock %}
+{% block title %}{{ product.name }} - {% if lang == 'en' %}Flytiger Technology Eagle Sandpaper{% else %}飞虎科技天鹰砂纸{% endif %}{% endblock %}
 
 {% block content %}
 <div class="container py-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">首页</a></li>
-            <li class="breadcrumb-item"><a href="{{ url_for('products.index') }}">产品</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index', lang=lang) }}">{% if lang == 'en' %}Home{% else %}首页{% endif %}</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('products.index', lang=lang) }}">{% if lang == 'en' %}Products{% else %}产品{% endif %}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
         </ol>
     </nav>
@@ -23,13 +23,13 @@
                             <img src="{{ url_for('static', filename='images/' + product.image) }}" class="img-thumbnail" alt="{{ product.name }}" onerror="this.src='https://via.placeholder.com/150x100?text={{ product.name }}'">
                         </div>
                         <div class="col-3">
-                            <img src="https://via.placeholder.com/150x100?text=详图1" class="img-thumbnail" alt="详细图片1">
+                            <img src="https://via.placeholder.com/150x100?text={% if lang == 'en' %}Detail 1{% else %}详图1{% endif %}" class="img-thumbnail" alt="{% if lang == 'en' %}Detail image 1{% else %}详细图片1{% endif %}">
                         </div>
                         <div class="col-3">
-                            <img src="https://via.placeholder.com/150x100?text=详图2" class="img-thumbnail" alt="详细图片2">
+                            <img src="https://via.placeholder.com/150x100?text={% if lang == 'en' %}Detail 2{% else %}详图2{% endif %}" class="img-thumbnail" alt="{% if lang == 'en' %}Detail image 2{% else %}详细图片2{% endif %}">
                         </div>
                         <div class="col-3">
-                            <img src="https://via.placeholder.com/150x100?text=详图3" class="img-thumbnail" alt="详细图片3">
+                            <img src="https://via.placeholder.com/150x100?text={% if lang == 'en' %}Detail 3{% else %}详图3{% endif %}" class="img-thumbnail" alt="{% if lang == 'en' %}Detail image 3{% else %}详细图片3{% endif %}">
                         </div>
                     </div>
                 </div>
@@ -42,41 +42,41 @@
             <p class="lead">{{ product.description }}</p>
             <hr>
             <div class="mb-3">
-                <h4 class="text-danger">￥{{ product.price }}</h4>
-                <small class="text-muted">含税，不含运费</small>
+                <h4 class="text-danger">{% if lang == 'en' %}${% else %}￥{% endif %}{{ product.price }}</h4>
+                <small class="text-muted">{% if lang == 'en' %}Including tax, excluding shipping{% else %}含税，不含运费{% endif %}</small>
             </div>
             <div class="mb-3">
-                <h6>规格：</h6>
+                <h6>{% if lang == 'en' %}Specifications:{% else %}规格：{% endif %}</h6>
                 <p>{{ product.specifications }}</p>
             </div>
             <div class="mb-3">
-                <h6>适用场景：</h6>
+                <h6>{% if lang == 'en' %}Application Scenarios:{% else %}适用场景：{% endif %}</h6>
                 <p>{{ product.description }}</p>
             </div>
             <div class="mb-3">
-                <h6>库存状态：</h6>
-                <span class="badge bg-success">有货</span>
+                <h6>{% if lang == 'en' %}Stock Status:{% else %}库存状态：{% endif %}</h6>
+                <span class="badge bg-success">{% if lang == 'en' %}In Stock{% else %}有货{% endif %}</span>
             </div>
             
             <!-- 添加到购物车 -->
-            <form action="{{ url_for('cart.add') }}" method="post" class="mb-3">
+            <form action="{{ url_for('cart.add', lang=lang) }}" method="post" class="mb-3">
                 <input type="hidden" name="product_id" value="{{ product.id }}">
                 <div class="row g-3 align-items-center">
                     <div class="col-auto">
-                        <label for="quantity" class="col-form-label">数量：</label>
+                        <label for="quantity" class="col-form-label">{% if lang == 'en' %}Quantity:{% else %}数量：{% endif %}</label>
                     </div>
                     <div class="col-auto">
                         <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1" max="100">
                     </div>
                     <div class="col-auto">
                         <span class="form-text">
-                            (库存充足)
+                            {% if lang == 'en' %}(Sufficient stock){% else %}(库存充足){% endif %}
                         </span>
                     </div>
                 </div>
                 <div class="d-grid gap-2 mt-3">
-                    <button type="submit" class="btn btn-primary btn-lg">添加到购物车</button>
-                    <button type="button" class="btn btn-outline-primary">立即购买</button>
+                    <button type="submit" class="btn btn-primary btn-lg">{% if lang == 'en' %}Add to Cart{% else %}添加到购物车{% endif %}</button>
+                    <button type="button" class="btn btn-outline-primary">{% if lang == 'en' %}Buy Now{% else %}立即购买{% endif %}</button>
                 </div>
             </form>
             
@@ -88,7 +88,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill text-success me-2" viewBox="0 0 16 16">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
                             </svg>
-                            正品保证
+                            {% if lang == 'en' %}Genuine Guarantee{% else %}正品保证{% endif %}
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -96,7 +96,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill text-success me-2" viewBox="0 0 16 16">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
                             </svg>
-                            快速发货
+                            {% if lang == 'en' %}Fast Shipping{% else %}快速发货{% endif %}
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -104,7 +104,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill text-success me-2" viewBox="0 0 16 16">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
                             </svg>
-                            售后保障
+                            {% if lang == 'en' %}After-sales Support{% else %}售后保障{% endif %}
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -112,7 +112,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill text-success me-2" viewBox="0 0 16 16">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
                             </svg>
-                            技术支持
+                            {% if lang == 'en' %}Technical Support{% else %}技术支持{% endif %}
                         </div>
                     </div>
                 </div>
@@ -125,89 +125,125 @@
         <div class="col-12">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-detail" aria-selected="true">产品详情</button>
-                    <button class="nav-link" id="nav-specs-tab" data-bs-toggle="tab" data-bs-target="#nav-specs" type="button" role="tab" aria-controls="nav-specs" aria-selected="false">规格参数</button>
-                    <button class="nav-link" id="nav-usage-tab" data-bs-toggle="tab" data-bs-target="#nav-usage" type="button" role="tab" aria-controls="nav-usage" aria-selected="false">使用指南</button>
+                    <button class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab" aria-controls="nav-detail" aria-selected="true">{% if lang == 'en' %}Product Details{% else %}产品详情{% endif %}</button>
+                    <button class="nav-link" id="nav-specs-tab" data-bs-toggle="tab" data-bs-target="#nav-specs" type="button" role="tab" aria-controls="nav-specs" aria-selected="false">{% if lang == 'en' %}Specifications{% else %}规格参数{% endif %}</button>
+                    <button class="nav-link" id="nav-usage-tab" data-bs-toggle="tab" data-bs-target="#nav-usage" type="button" role="tab" aria-controls="nav-usage" aria-selected="false">{% if lang == 'en' %}Usage Guide{% else %}使用指南{% endif %}</button>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
                 <div class="tab-pane fade show active p-4 border border-top-0" id="nav-detail" role="tabpanel" aria-labelledby="nav-detail-tab">
-                    <h4>产品详情</h4>
-                    <p>天鹰砂纸是一款优质打磨工具，采用高强度基材和优质磨料制成，具有以下特点：</p>
+                    <h4>{% if lang == 'en' %}Product Details{% else %}产品详情{% endif %}</h4>
+                    <p>
+                        {% if lang == 'en' %}
+                        Eagle sandpaper is a high-quality sanding tool made with high-strength backing material and premium abrasives, featuring the following characteristics:
+                        {% else %}
+                        天鹰砂纸是一款优质打磨工具，采用高强度基材和优质磨料制成，具有以下特点：
+                        {% endif %}
+                    </p>
                     <ul>
-                        <li>耐用性强：专业级耐磨基材，延长使用寿命</li>
-                        <li>切削能力强：优质磨料，提高工作效率</li>
-                        <li>均匀涂覆：磨料分布均匀，保证打磨效果一致</li>
-                        <li>多种粒度：从粗磨到精磨，满足不同工序需求</li>
+                        <li>
+                            {% if lang == 'en' %}
+                            Durability: Professional-grade wear-resistant backing material, extending service life
+                            {% else %}
+                            耐用性强：专业级耐磨基材，延长使用寿命
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% if lang == 'en' %}
+                            Strong cutting ability: High-quality abrasives, improving work efficiency
+                            {% else %}
+                            切削能力强：优质磨料，提高工作效率
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% if lang == 'en' %}
+                            Uniform coating: Even distribution of abrasives, ensuring consistent sanding results
+                            {% else %}
+                            均匀涂覆：磨料分布均匀，保证打磨效果一致
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% if lang == 'en' %}
+                            Multiple grit sizes: From coarse to fine sanding, meeting different process requirements
+                            {% else %}
+                            多种粒度：从粗磨到精磨，满足不同工序需求
+                            {% endif %}
+                        </li>
                     </ul>
                     <div class="text-center my-4">
-                        <img src="https://via.placeholder.com/800x400?text=产品详情图" class="img-fluid rounded" alt="产品详情">
+                        <img src="https://via.placeholder.com/800x400?text={% if lang == 'en' %}Product Details{% else %}产品详情图{% endif %}" class="img-fluid rounded" alt="{% if lang == 'en' %}Product Details{% else %}产品详情{% endif %}">
                     </div>
-                    <p>天鹰砂纸广泛应用于木工、金属加工、汽车维修等领域，是专业工匠和DIY爱好者的理想选择。</p>
+                    <p>
+                        {% if lang == 'en' %}
+                        Eagle sandpaper is widely used in woodworking, metalworking, automotive repair and other fields, making it an ideal choice for professional craftsmen and DIY enthusiasts.
+                        {% else %}
+                        天鹰砂纸广泛应用于木工、金属加工、汽车维修等领域，是专业工匠和DIY爱好者的理想选择。
+                        {% endif %}
+                    </p>
                 </div>
                 <div class="tab-pane fade p-4 border border-top-0" id="nav-specs" role="tabpanel" aria-labelledby="nav-specs-tab">
-                    <h4>规格参数</h4>
+                    <h4>{% if lang == 'en' %}Specifications{% else %}规格参数{% endif %}</h4>
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
-                                <th scope="row" width="30%">品牌</th>
-                                <td>天鹰</td>
+                                <th scope="row" width="30%">{% if lang == 'en' %}Brand{% else %}品牌{% endif %}</th>
+                                <td>{% if lang == 'en' %}Eagle{% else %}天鹰{% endif %}</td>
                             </tr>
                             <tr>
-                                <th scope="row">型号</th>
+                                <th scope="row">{% if lang == 'en' %}Model{% else %}型号{% endif %}</th>
                                 <td>{{ product.name.split('-')[1] }}</td>
                             </tr>
                             <tr>
-                                <th scope="row">尺寸</th>
+                                <th scope="row">{% if lang == 'en' %}Size{% else %}尺寸{% endif %}</th>
                                 <td>{{ product.specifications }}</td>
                             </tr>
                             <tr>
-                                <th scope="row">材质</th>
-                                <td>高强度纸基 + 优质磨料</td>
+                                <th scope="row">{% if lang == 'en' %}Material{% else %}材质{% endif %}</th>
+                                <td>{% if lang == 'en' %}High-strength paper base + Premium abrasives{% else %}高强度纸基 + 优质磨料{% endif %}</td>
                             </tr>
                             <tr>
-                                <th scope="row">适用场景</th>
+                                <th scope="row">{% if lang == 'en' %}Application Scenarios{% else %}适用场景{% endif %}</th>
                                 <td>{{ product.description }}</td>
                             </tr>
                             <tr>
-                                <th scope="row">包装规格</th>
-                                <td>50张/包</td>
+                                <th scope="row">{% if lang == 'en' %}Packaging{% else %}包装规格{% endif %}</th>
+                                <td>{% if lang == 'en' %}50 pieces/pack{% else %}50张/包{% endif %}</td>
                             </tr>
                             <tr>
-                                <th scope="row">产地</th>
-                                <td>中国</td>
+                                <th scope="row">{% if lang == 'en' %}Origin{% else %}产地{% endif %}</th>
+                                <td>{% if lang == 'en' %}China{% else %}中国{% endif %}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="tab-pane fade p-4 border border-top-0" id="nav-usage" role="tabpanel" aria-labelledby="nav-usage-tab">
-                    <h4>使用指南</h4>
+                    <h4>{% if lang == 'en' %}Usage Guide{% else %}使用指南{% endif %}</h4>
                     <div class="alert alert-info">
-                        <h5>选择合适的粒度</h5>
+                        <h5>{% if lang == 'en' %}Selecting the Right Grit Size{% else %}选择合适的粒度{% endif %}</h5>
                         <ul>
-                            <li>P40-P80：粗磨，适合去除旧漆、锈迹等</li>
-                            <li>P100-P180：中磨，适合表面平整、去除细小缺陷</li>
-                            <li>P220-P400：细磨，适合上漆前准备、精细打磨</li>
-                            <li>P600以上：超细磨，适合漆面修复、精抛光</li>
+                            <li>{% if lang == 'en' %}P40-P80: Coarse sanding, suitable for removing old paint, rust, etc.{% else %}P40-P80：粗磨，适合去除旧漆、锈迹等{% endif %}</li>
+                            <li>{% if lang == 'en' %}P100-P180: Medium sanding, suitable for surface leveling, removing minor defects{% else %}P100-P180：中磨，适合表面平整、去除细小缺陷{% endif %}</li>
+                            <li>{% if lang == 'en' %}P220-P400: Fine sanding, suitable for pre-painting preparation, detailed sanding{% else %}P220-P400：细磨，适合上漆前准备、精细打磨{% endif %}</li>
+                            <li>{% if lang == 'en' %}P600 and above: Ultra-fine sanding, suitable for paint repair, fine polishing{% else %}P600以上：超细磨，适合漆面修复、精抛光{% endif %}</li>
                         </ul>
                     </div>
-                    <h5>使用步骤</h5>
+                    <h5>{% if lang == 'en' %}Usage Steps{% else %}使用步骤{% endif %}</h5>
                     <ol>
-                        <li>准备工作：清洁待打磨表面，确保无油污和灰尘</li>
-                        <li>选择合适的粒度：根据打磨任务选择适当的砂纸粒度</li>
-                        <li>打磨技巧：保持均匀力度，沿着木纹或材料纹理方向打磨</li>
-                        <li>逐级细化：从粗粒度逐渐过渡到细粒度，不要跳级太大</li>
-                        <li>清理表面：每次更换粒度前，清理表面的打磨粉尘</li>
+                        <li>{% if lang == 'en' %}Preparation: Clean the surface to be sanded, ensuring it is free of oil and dust{% else %}准备工作：清洁待打磨表面，确保无油污和灰尘{% endif %}</li>
+                        <li>{% if lang == 'en' %}Select the appropriate grit: Choose the right sandpaper grit based on the sanding task{% else %}选择合适的粒度：根据打磨任务选择适当的砂纸粒度{% endif %}</li>
+                        <li>{% if lang == 'en' %}Sanding technique: Maintain even pressure, sand along the grain or material texture direction{% else %}打磨技巧：保持均匀力度，沿着木纹或材料纹理方向打磨{% endif %}</li>
+                        <li>{% if lang == 'en' %}Gradual refinement: Gradually transition from coarse to fine grit, avoiding large jumps in grit size{% else %}逐级细化：从粗粒度逐渐过渡到细粒度，不要跳级太大{% endif %}</li>
+                        <li>{% if lang == 'en' %}Clean the surface: Remove sanding dust before changing to a different grit size{% else %}清理表面：每次更换粒度前，清理表面的打磨粉尘{% endif %}</li>
                     </ol>
                     <div class="text-center my-4">
-                        <img src="https://via.placeholder.com/800x400?text=使用示意图" class="img-fluid rounded" alt="使用示意图">
+                        <img src="https://via.placeholder.com/800x400?text={% if lang == 'en' %}Usage Guide{% else %}使用示意图{% endif %}" class="img-fluid rounded" alt="{% if lang == 'en' %}Usage Guide{% else %}使用示意图{% endif %}">
                     </div>
-                    <h5>注意事项</h5>
+                    <h5>{% if lang == 'en' %}Precautions{% else %}注意事项{% endif %}</h5>
                     <ul>
-                        <li>使用时建议佩戴防尘口罩和护目镜</li>
-                        <li>水砂纸使用前需浸泡在水中约5-10分钟</li>
-                        <li>干磨时避免过度用力，防止过热损坏砂纸</li>
-                        <li>适当更换使用部位，充分利用砂纸的每个部分</li>
+                        <li>{% if lang == 'en' %}It is recommended to wear a dust mask and goggles when using{% else %}使用时建议佩戴防尘口罩和护目镜{% endif %}</li>
+                        <li>{% if lang == 'en' %}Wet sandpaper needs to be soaked in water for about 5-10 minutes before use{% else %}水砂纸使用前需浸泡在水中约5-10分钟{% endif %}</li>
+                        <li>{% if lang == 'en' %}Avoid excessive pressure when dry sanding to prevent overheating and damaging the sandpaper{% else %}干磨时避免过度用力，防止过热损坏砂纸{% endif %}</li>
+                        <li>{% if lang == 'en' %}Appropriately change the area of use to fully utilize every part of the sandpaper{% else %}适当更换使用部位，充分利用砂纸的每个部分{% endif %}</li>
                     </ul>
                 </div>
             </div>
