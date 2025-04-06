@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}结算 - 飞虎科技天鹰砂纸{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">结算</h1>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">收货信息</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('orders.process') }}" method="post" id="checkout-form">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="firstName" class="form-label">姓名</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="phoneNumber" class="form-label">手机号码</label>
+                                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="address" class="form-label">详细地址</label>
+                                <input type="text" class="form-control" id="address" name="address" placeholder="街道、门牌号等" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="province" class="form-label">省份</label>
+                                <select class="form-select" id="province" name="province" required>
+                                    <option value="">选择省份...</option>
+                                    <option>北京市</option>
+                                    <option>上海市</option>
+                                    <option>广东省</option>
+                                    <!-- 其他省份 -->
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="city" class="form-label">城市</label>
+                                <select class="form-select" id="city" name="city" required>
+                                    <option value="">选择城市...</option>
+                                    <option>广州市</option>
+                                    <option>深圳市</option>
+                                    <option>佛山市</option>
+                                    <!-- 其他城市 -->
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="postalCode" class="form-label">邮政编码</label>
+                                <input type="text" class="form-control" id="postalCode" name="postalCode" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">支付方式</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="paymentMethod" id="alipay" checked>
+                        <label class="form-check-label" for="alipay">
+                            支付宝
+                        </label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="paymentMethod" id="wechatPay">
+                        <label class="form-check-label" for="wechatPay">
+                            微信支付
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="paymentMethod" id="bankTransfer">
+                        <label class="form-check-label" for="bankTransfer">
+                            银行转账
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">发票信息</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="needInvoice">
+                        <label class="form-check-label" for="needInvoice">需要发票</label>
+                    </div>
+                    <div id="invoiceForm" class="d-none">
+                        <div class="mb-3">
+                            <label for="invoiceType" class="form-label">发票类型</label>
+                            <select class="form-select" id="invoiceType">
+                                <option value="personal">个人</option>
+                                <option value="company">公司</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="invoiceTitle" class="form-label">发票抬头</label>
+                            <input type="text" class="form-control" id="invoiceTitle">
+                        </div>
+                        <div class="mb-3">
+                            <label for="taxNumber" class="form-label">税号</label>
+                            <input type="text" class="form-control" id="taxNumber">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card position-sticky" style="top: 2rem;">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">订单摘要</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            商品总计
+                            <span>￥24.50</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            运费
+                            <span>￥15.00</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 fw-bold">
+                            总计
+                            <span>￥39.50</span>
+                        </li>
+                    </ul>
+                    <div class="d-grid gap-2 mt-3">
+                        <button type="submit" class="btn btn-primary btn-lg" form="checkout-form">提交订单</button>
+                        <a href="{{ url_for('cart.index') }}" class="btn btn-outline-secondary">返回购物车</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 处理发票表单的显示隐藏
+        const needInvoiceCheckbox = document.getElementById('needInvoice');
+        const invoiceForm = document.getElementById('invoiceForm');
+        
+        needInvoiceCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                invoiceForm.classList.remove('d-none');
+            } else {
+                invoiceForm.classList.add('d-none');
+            }
+        });
+    });
+</script>
+{% endblock %} 

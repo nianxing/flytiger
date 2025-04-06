@@ -39,61 +39,28 @@ jobs:
       run: |
         mkdir -p deploy_package
         
-        # Copy essential files
-        cp -r app deploy_package/
-        
-        # Ensure templates directory exists
+        # Create essential directories
+        mkdir -p deploy_package/app
         mkdir -p deploy_package/app/templates
-        mkdir -p deploy_package/app/templates/errors
         mkdir -p deploy_package/app/templates/products
         mkdir -p deploy_package/app/templates/orders
         mkdir -p deploy_package/app/templates/cart
-        
-        # Copy static files if they exist
-        cp -r static deploy_package/ || echo "No static directory"
-        
-        # Ensure routes directories exist
+        mkdir -p deploy_package/app/templates/errors
         mkdir -p deploy_package/app/routes
-        touch deploy_package/app/routes/__init__.py
+        mkdir -p deploy_package/static
+        
+        # Copy essential files
+        cp -r app/. deploy_package/app/
+        cp -r static/. deploy_package/static/ || echo "No static directory content"
         
         # Copy Python files
         cp config.py deploy_package/
         cp run.py deploy_package/
         cp app.py deploy_package/
         cp application.py deploy_package/
-        cp app_start.py deploy_package/
         cp wsgi.py deploy_package/
         cp debug_imports.py deploy_package/
-        
-        # Copy configuration files
         cp gunicorn.conf.py deploy_package/
-        
-        # Create explicit install script for Azure
-        echo "Creating Azure install script..."
-        echo '#!/bin/bash' > deploy_package/install_dependencies.sh
-        echo 'pip install python-dotenv' >> deploy_package/install_dependencies.sh
-        echo 'pip install -r requirements.txt' >> deploy_package/install_dependencies.sh
-        chmod +x deploy_package/install_dependencies.sh
-        
-        # Create a special requirements.txt file that Azure will recognize
-        echo "flask==2.2.3" > deploy_package/requirements.txt
-        echo "python-dotenv==1.0.0" >> deploy_package/requirements.txt
-        echo "azure-storage-blob==12.16.0" >> deploy_package/requirements.txt
-        echo "azure-data-tables==12.4.2" >> deploy_package/requirements.txt
-        echo "azure-functions==1.14.0" >> deploy_package/requirements.txt
-        echo "botbuilder-core==4.14.3" >> deploy_package/requirements.txt
-        echo "botbuilder-dialogs==4.14.3" >> deploy_package/requirements.txt
-        echo "botbuilder-ai==4.14.3" >> deploy_package/requirements.txt
-        echo "requests==2.28.2" >> deploy_package/requirements.txt
-        echo "Werkzeug==2.2.3" >> deploy_package/requirements.txt
-        echo "Jinja2==3.1.2" >> deploy_package/requirements.txt
-        echo "itsdangerous==2.1.2" >> deploy_package/requirements.txt
-        echo "MarkupSafe==2.1.2" >> deploy_package/requirements.txt
-        echo "gunicorn==20.1.0" >> deploy_package/requirements.txt
-        
-        # Copy deployment files
-        cp custom_startup.sh deploy_package/
-        chmod +x deploy_package/custom_startup.sh
         
         # Create empty web.config to indicate Python app
         echo '<?xml version="1.0"?><configuration></configuration>' > deploy_package/web.config
